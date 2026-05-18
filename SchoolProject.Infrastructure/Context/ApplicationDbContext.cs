@@ -1,13 +1,20 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SchoolProject.Data.Entities.Identity;
 
 namespace SchoolProject.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int>
     {
+        public ApplicationDbContext()
+        {
+        }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
+        public DbSet<SchoolProject.Data.Entities.Identity.AppUser> Users { get; set; }
         public DbSet<SchoolProject.Data.Entities.Student> Students { get; set; }
         public DbSet<SchoolProject.Data.Entities.Department> Departments { get; set; }
         public DbSet<SchoolProject.Data.Entities.Subjects> Subjects { get; set; }
