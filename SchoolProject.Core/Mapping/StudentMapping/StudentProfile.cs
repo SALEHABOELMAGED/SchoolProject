@@ -7,6 +7,7 @@ namespace SchoolProject.Core.Mapping.StudentMapping
         public StudentProfile()
         {
             GetStudentListMapping();
+            GetStudentPaginationMapping();
             GetStudentByIdMapping();
             AddStudentMapping();
             EditStudentMapping();
