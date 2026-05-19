@@ -11,27 +11,29 @@ namespace SchoolProject.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
+            migrationBuilder.DropColumn(
+                name: "Period",
+                table: "Subjects");
+
+            migrationBuilder.AddColumn<int>(
                 name: "Period",
                 table: "Subjects",
                 type: "int",
-                nullable: true,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime2",
-                oldNullable: true);
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<DateTime>(
+            migrationBuilder.DropColumn(
+                name: "Period",
+                table: "Subjects");
+
+            migrationBuilder.AddColumn<DateTime>(
                 name: "Period",
                 table: "Subjects",
                 type: "datetime2",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int",
-                oldNullable: true);
+                nullable: true);
         }
     }
 }
