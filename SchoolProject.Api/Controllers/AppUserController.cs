@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SchoolProject.Api.Base;
+using SchoolProject.Core.Features.ApplicationUser.Commands.Models;
 using SchoolProject.Core.Features.ApplicationUser.Queries.Models;
 using SchoolProject.Core.Features.User.Commands.Models;
 using SchoolProject.Data.AppMetaData;
@@ -39,6 +40,12 @@ namespace SchoolProject.Api.Controllers
         public async Task<IActionResult> GetUserByIdAsync([FromRoute] int id)
         {
             return NewResult(await _mediator.Send(new GetUserByIdQuery { Id = id }));
+        }
+        [HttpPut(Routes.AppUserRouting.UpdateUser)]
+        public async Task<IActionResult> UpdateUserCommand([FromRoute] int id, [FromBody] UpdateUserCommand command)
+        {
+            command.Id = id;
+            return NewResult(await _mediator.Send(command));
         }
 
         #endregion
