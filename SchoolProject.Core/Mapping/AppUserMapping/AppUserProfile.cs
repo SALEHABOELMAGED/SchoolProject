@@ -7,6 +7,7 @@ namespace SchoolProject.Core.Mapping.AppUser
         public AppUserProfile()
         {
             AddUserCommandMapping();
+            GetPaginationMapping();
         }
     }
 }
