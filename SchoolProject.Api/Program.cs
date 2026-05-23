@@ -34,7 +34,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 #region Dependency Injection
 builder.Services.AddInfrastructureDependencies()
                 .AddServiceDependencies()
-                .AddCoreDependencies();
+                .AddCoreDependencies()
+                .AddServiceRegistration(builder.Configuration);
 #endregion
 
 #region Localization
