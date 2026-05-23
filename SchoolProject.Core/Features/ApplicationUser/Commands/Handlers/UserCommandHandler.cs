@@ -13,6 +13,8 @@ namespace SchoolProject.Core.Features.User.Commands.Handlers
     public class UserCommandHandler : ResponseHandler,
         IRequestHandler<AddUserCommand, Response<string>>,
         IRequestHandler<UpdateUserCommand, Response<string>>,
+        IRequestHandler<DeleteUserCommand, Response<string>>,
+        IRequestHandler<ChangeUserPasswordCommand, Response<string>>,
         IStringLocalizer<SharedResources>
     {
         #region Fields
@@ -69,6 +71,34 @@ namespace SchoolProject.Core.Features.User.Commands.Handlers
             if (!result.Succeeded) return BadRequest<string>(string.Join(", ", result.Errors.Select(e => e.Description)));
 
             return Success<string>(_stringlocalizer["User Updated Successfully"]);
+        }
+
+        public async Task<Response<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        {
+            var findUser = await _userManager.FindByIdAsync(request.Id.ToString());
+
+            if (findUser == null)
+                return NotFound<string>("User not found.");
+
+            var result = await _userManager.DeleteAsync(findUser);
+
+            if (result.Succeeded)
+                return Success<string>($"Id {request.Id} Deleted Successfully.");
+            else
+                return BadRequest<string>(string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
+
+        public async Task<Response<string>> Handle(ChangeUserPasswordCommand request, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByIdAsync(request.Id.ToString());
+
+            if (user == null) return BadRequest<string>(_stringlocalizer["User Not Found"]);
+
+            var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
+
+            if (!result.Succeeded) return BadRequest<string>(string.Join(", ", result.Errors.Select(e => e.Description)));
+            return Success<string>(_stringlocalizer["Password Changed Successfully"]);
+
         }
         #endregion
 

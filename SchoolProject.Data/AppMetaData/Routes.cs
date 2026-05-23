@@ -28,7 +28,9 @@
             public const string AddUser = Prefix + "/Add";
             public const string Paginated = Prefix + "/Paginated";
             public const string GetUserById = Prefix + "/{id}";
-            public const string UpdateUser = Prefix + "/{id}";
+            public const string UpdateUser = Prefix + "/{id}/Update";
+            public const string DeleteUser = Prefix + "/{id}/Delete";
+            public const string ChangePassword = Prefix + "/{id}/ChangePassword";
 
         }
     }
