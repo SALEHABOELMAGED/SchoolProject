@@ -33,5 +33,11 @@
             public const string ChangePassword = Prefix + "/{id}/ChangePassword";
 
         }
+        public static class AuthenticationRouting
+        {
+            public const string Prefix = Base + "/Authentication";
+            public const string SignIn = Prefix + "/SignIn";
+            public const string SignUp = Prefix + "/SignUp";
+        }
     }
 }
