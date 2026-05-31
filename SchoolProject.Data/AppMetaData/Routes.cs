@@ -37,7 +37,8 @@
         {
             public const string Prefix = Base + "/Authentication";
             public const string SignIn = Prefix + "/SignIn";
-            public const string SignUp = Prefix + "/SignUp";
+            public const string RefreshToken = Prefix + "/RefreshToken";
+            public const string ValidateToken = Prefix + "/ValidateToken";
         }
     }
 }

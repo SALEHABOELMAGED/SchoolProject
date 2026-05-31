@@ -4,12 +4,14 @@ using Microsoft.Extensions.Localization;
 using SchoolProject.Core.Bases;
 using SchoolProject.Core.Features.Authentication.Commands.Models;
 using SchoolProject.Data.Entities.Identity;
+using SchoolProject.Data.Helpers;
 using SchoolProject.Service.Abstracts;
 
 namespace SchoolProject.Core.Features.Authentication.Commands.Handlers
 {
     public class AuthenticationCommandHandler : ResponseHandler,
-        IRequestHandler<SignInCommand, Response<string>>
+        IRequestHandler<SignInCommand, Response<JwtAuthenticationResult>>,
+        IRequestHandler<RefreshTokenCommand, Response<JwtAuthenticationResult>>
     {
         #region Fields
         private readonly UserManager<AppUser> _userManager;
@@ -31,21 +33,31 @@ namespace SchoolProject.Core.Features.Authentication.Commands.Handlers
         }
         #endregion
         #region Actions
-        public async Task<Response<string>> Handle(SignInCommand request, CancellationToken cancellationToken)
+        public async Task<Response<JwtAuthenticationResult>> Handle(SignInCommand request, CancellationToken cancellationToken)
         {
             // Check if user exists
             var user = await _userManager.FindByNameAsync(request.Username);
             if (user == null)
-                return BadRequest<string>(_stringLocalizer["UserNotFound"]);
+                return BadRequest<JwtAuthenticationResult>(_stringLocalizer["UserNotFound"]);
 
             // Validate password
             var signIn = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
             if (!signIn.Succeeded)
-                return BadRequest<string>(_stringLocalizer["InvalidCredentials"]);
+                return BadRequest<JwtAuthenticationResult>(_stringLocalizer["InvalidCredentials"]);
 
             // Generate and return JWT token
-            var token = await _authenticationService.CreateJWTToken(user);
-            return Success<string>(token);
+            var token = await _authenticationService.GetJWTToken(user);
+            return Success<JwtAuthenticationResult>(token);
+        }
+
+        public async Task<Response<JwtAuthenticationResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        {
+            // Validate the refresh token and generate a new JWT token
+            var result = await _authenticationService.GetRefreshToken(request.AccessToken, request.RefreshToken);
+            if (result == null)
+                return BadRequest<JwtAuthenticationResult>(_stringLocalizer["InvalidRefreshToken"]);
+            return Success(result);
+
         }
         #endregion
     }
